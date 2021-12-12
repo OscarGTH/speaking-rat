@@ -4,3 +4,4 @@ When program is being ran, it randomly calls an API and speaks out the result. C
 They are current day's sunrise and sunset time, programming quote, your mom joke and an inspirational quote.
 
 You are free to use this project as you wish.
+

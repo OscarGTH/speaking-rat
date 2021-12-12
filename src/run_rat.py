@@ -17,7 +17,8 @@ __license__ = "MIT"
 
 engine = pyttsx3.init()  # TTS engine creation
 # Slowing down the speech rate by 5%
-engine.setProperty('rate', 150)
+engine.setProperty('voice','english+f2')
+engine.setProperty('rate', 130)
 # Counter to limit api call repeating if requests fail.
 api_call_count = 0
 # Datetime format
