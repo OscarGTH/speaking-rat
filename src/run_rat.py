@@ -33,7 +33,7 @@ def read_custom_phrase():
 
     logging.info("Reading custom phrase.")
     # Opening JSON file
-    f = open("../phrases/phrases.json", "r")
+    f = open("/home/pi/Documents/SpeakingRat/speaking-rat/phrases/phrases.json", "r")
     # Loading data into dict
     data = json.load(f)
     # Extracting random phrase from file
@@ -120,8 +120,11 @@ def choose_phrase():
     logging.info("Choosing phrase.")
     # Possible functions to call
     possible_functions = [read_inspirational_quote,
-                          read_joke, read_programming_quote, read_custom_phrase, read_day_statistics]
-    rand_num = random.randint(0, 4)
+                          read_joke, read_programming_quote,
+                          read_custom_phrase, read_custom_phrase,
+                          read_custom_phrase, read_custom_phrase,
+                          read_day_statistics]
+    rand_num = random.randint(0, 7)
     # Calling random function
     possible_functions[rand_num]()
 
