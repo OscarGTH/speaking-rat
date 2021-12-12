@@ -8,6 +8,7 @@ import pyttsx3
 import random
 import time
 import logging
+import json
 from datetime import datetime, timedelta
 
 __author__ = "Oskari Niskanen"
@@ -17,8 +18,9 @@ __license__ = "MIT"
 
 engine = pyttsx3.init()  # TTS engine creation
 # Slowing down the speech rate by 5%
-engine.setProperty('voice','english+f2')
+#engine.setProperty('voice','english+f2')
 engine.setProperty('rate', 130)
+rate = 130
 # Counter to limit api call repeating if requests fail.
 api_call_count = 0
 # Datetime format
@@ -26,6 +28,25 @@ formatfrom = "%Y-%m-%dT%H:%M:%S+00:00"
 # Configuring logger
 logging.basicConfig(level=logging.INFO)
 
+def read_custom_phrase():
+    """ Reads a random line from custom JSON file """
+
+    logging.info("Reading custom phrase.")
+    # Opening JSON file
+    f = open("../phrases/phrases.json", "r")
+    # Loading data into dict
+    data = json.load(f)
+    # Extracting random phrase from file
+    phrase = data[str(random.randint(0,(len(data)-1)))]
+    # Counting words
+    words = phrase.split()
+    word_count = len(words)
+    global rate
+    # Setting speech rate based on word count
+    if (word_count > 100):
+        rate = 160
+    # Reading the phrase
+    read_string(phrase, "finnish", rate)
 
 def read_day_statistics():
     """ Reads sunrise and sunset times out loud. """
@@ -57,7 +78,7 @@ def read_day_statistics():
                           " and sets at " + set_minute + " past " + set_hour + " " + set_am_pm)
 
         # Reading sun statistics for current day.
-        read_string(sun_statistics)
+        read_string(sun_statistics, "english")
 
 
 def read_programming_quote():
@@ -68,7 +89,7 @@ def read_programming_quote():
     response = request_api(url)
     # Checking that correct key is in response
     if 'en' in response:
-        read_string(response['en'])
+        read_string(response['en'], "english")
 
 
 def read_inspirational_quote():
@@ -79,7 +100,7 @@ def read_inspirational_quote():
     response = request_api(url)
     # Checking that correct key is in response
     if 'quote' in response:
-        read_string(response['quote'])
+        read_string(response['quote'], "english")
 
 
 def read_joke():
@@ -90,7 +111,7 @@ def read_joke():
     response = request_api(joke_url)
     # Checking that correct key is in response
     if 'joke' in response:
-        read_string(response['joke'])
+        read_string(response['joke'], "english")
 
 
 def choose_phrase():
@@ -99,8 +120,8 @@ def choose_phrase():
     logging.info("Choosing phrase.")
     # Possible functions to call
     possible_functions = [read_inspirational_quote,
-                          read_joke, read_programming_quote, read_day_statistics]
-    rand_num = random.randint(0, 3)
+                          read_joke, read_programming_quote, read_custom_phrase, read_day_statistics]
+    rand_num = random.randint(0, 4)
     # Calling random function
     possible_functions[rand_num]()
 
@@ -121,9 +142,12 @@ def request_api(url):
         choose_phrase()
 
 
-def read_string(sentence):
+def read_string(sentence, language, base_rate=rate):
     """ Reads a given sentence out loud. """
-
+    # Set chosen speech language 
+    engine.setProperty('voice', language+'+f2')
+    # Set speech rate
+    engine.setProperty('rate', base_rate)
     engine.say(sentence)
     engine.runAndWait()
 

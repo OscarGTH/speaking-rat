@@ -5,3 +5,5 @@ They are current day's sunrise and sunset time, programming quote, your mom joke
 
 You are free to use this project as you wish.
 
+The program is meant to be run by crontab so you can add this to your crontab. (by running command crontab -e)
+*/5 * * * * <path-to-virtual-env>/bin/python <path-to-project>/speaking-rat/src/run_rat.py
